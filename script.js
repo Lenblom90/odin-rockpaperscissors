@@ -6,30 +6,40 @@ function getComputerChoice(){
 }
 
 function playRound(playerChoice, computerSelection) {
-    let winMessage = `You Win! ${playerChoice} Beats ${computerSelection}`;
-    let loseMessage =  `You Lose! ${computerSelection} Beats ${playerChoice}`;
-    let tieMessage = "It's a Tie!";
-    
+    const tieScore = [0,0,"It's a Tie!"];
+    const loseScore = [0,1,`You Lose! ${computerSelection} Beats ${playerChoice}`];
+    const winScore = [1,0,`You Win! ${playerChoice} Beats ${computerSelection}`];
+
     if (playerChoice == computerSelection){        
-        return tieMessage;
+        return tieScore;
     }
     else if (playerChoice == "Rock"){
-        return computerSelection == "Paper" ? loseMessage : winMessage
+        return computerSelection == "Paper" ? loseScore : winScore
     } else if (playerChoice == "Paper") {
-        return computerSelection == "Scissors" ? loseMessage : winMessage
+        return computerSelection == "Scissors" ? loseScore : winScore
     } else if (playerChoice == "Scissors") {
-        return computerSelection == "Rock" ? loseMessage : winMessage
+        return computerSelection == "Rock" ? loseScore : winScore
+    }
+}
+
+function rps(e){
+    buttonChoice = e.target.textContent;    
+    let [playerScore, computerScore, message] = playRound(buttonChoice, getComputerChoice());
+    resultDisplay.textContent = resultDisplay.textContent + message;
+    if(playerDisplay.textContent && computerDisplay.textContent){
+        playerDisplay.textContent = parseInt(playerDisplay.textContent) + playerScore;
+        computerDisplay.textContent = parseInt(computerDisplay.textContent) + computerScore;    
     } else {
-        return "Invalid choice, please try again";
+        playerDisplay.textContent = playerScore;
+        computerDisplay.textContent = computerScore;
     }
 }
 
 const buttons = document.querySelectorAll("button");
 const resultDisplay = document.querySelector(".results");
-buttons.forEach(btn => btn.addEventListener('click', () => {
-    let result = playRound(btn.textContent, getComputerChoice())
-    resultDisplay.textContent = resultDisplay.textContent + result;
-}));
+const playerDisplay = document.querySelector("#playerScore");
+const computerDisplay = document.querySelector("#computerScore");
+buttons.forEach(btn => btn.addEventListener('click', rps));
 
 /*
 function game(){
